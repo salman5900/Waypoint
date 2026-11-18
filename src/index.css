@@ -70,7 +70,7 @@
   background-color: #ffffff !important;
 }
 
-/* One-time Staggered Entrance Animation on Mount (Zero Infinite Bobbing Lag) */
+/* One-time Staggered Entrance Animation on Mount */
 @keyframes collage-enter {
   0% {
     opacity: 0;
@@ -92,6 +92,37 @@
 
 .collage-card-enter-3 {
   animation: collage-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+}
+
+/* Hardware-Accelerated CSS @keyframes Bobbing (translateY) on Outer Card Wrappers */
+@keyframes floatBob {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(0);
+  }
+}
+
+.float-bob-wrapper-1 {
+  animation: floatBob 6s ease-in-out infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.float-bob-wrapper-2 {
+  animation: floatBob 7s ease-in-out 0.8s infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.float-bob-wrapper-3 {
+  animation: floatBob 5s ease-in-out 1.6s infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Tactile Interactive Elevations */

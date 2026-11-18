@@ -219,29 +219,31 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
               <div 
                 className="collage-card-enter-1 absolute left-0 top-6 w-[260px] sm:w-[290px] h-[340px] sm:h-[380px] z-20"
               >
-                <div className="collage-interactive-card w-full h-full rounded-[24px] overflow-hidden border border-white/90 relative group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=700&q=80" 
-                    alt="Kyoto Pagoda" 
-                    decoding="async"
-                    className="collage-inner-img w-full h-full object-cover"
-                  />
-                  {/* Crisp Lightweight Telemetry Badge */}
-                  <div 
-                    className="absolute bottom-4 left-4 right-4 p-3 rounded-xl"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.95)',
-                      border: '1px solid rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
-                    }}
-                  >
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                      <EnvironmentOutlined className="text-blue-600" />
-                      <span>Kyoto, Japan</span>
+                <div className="float-bob-wrapper-1 w-full h-full">
+                  <div className="collage-interactive-card w-full h-full rounded-[24px] overflow-hidden border border-white/90 relative group">
+                    <img 
+                      src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=700&q=80" 
+                      alt="Kyoto Pagoda" 
+                      decoding="async"
+                      className="collage-inner-img w-full h-full object-cover"
+                    />
+                    {/* Crisp Lightweight Telemetry Badge */}
+                    <div 
+                      className="absolute bottom-4 left-4 right-4 p-3 rounded-xl"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.9)',
+                        boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                        <EnvironmentOutlined className="text-blue-600" />
+                        <span>Kyoto, Japan</span>
+                      </div>
+                      <p className="text-[11px] font-semibold text-blue-700 mt-0.5 m-0">
+                        5 Days • Flights + Stay Synced
+                      </p>
                     </div>
-                    <p className="text-[11px] font-semibold text-blue-700 mt-0.5 m-0">
-                      5 Days • Flights + Stay Synced
-                    </p>
                   </div>
                 </div>
               </div>
@@ -250,22 +252,24 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
               <div 
                 className="collage-card-enter-2 absolute right-0 top-0 w-[230px] sm:w-[250px] h-[190px] sm:h-[210px] z-10"
               >
-                <div className="collage-interactive-card w-full h-full rounded-[22px] overflow-hidden border border-white/90 relative group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=700&q=80" 
-                    alt="Swiss Alps Mountain Lake" 
-                    decoding="async"
-                    className="collage-inner-img w-full h-full object-cover"
-                  />
-                  <div 
-                    className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.95)',
-                      border: '1px solid rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
-                    }}
-                  >
-                    🏔️ Swiss Alps Rail • 7 Days
+                <div className="float-bob-wrapper-2 w-full h-full">
+                  <div className="collage-interactive-card w-full h-full rounded-[22px] overflow-hidden border border-white/90 relative group">
+                    <img 
+                      src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=700&q=80" 
+                      alt="Swiss Alps Mountain Lake" 
+                      decoding="async"
+                      className="collage-inner-img w-full h-full object-cover"
+                    />
+                    <div 
+                      className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.9)',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
+                      }}
+                    >
+                      🏔️ Swiss Alps Rail • 7 Days
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,22 +278,24 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
               <div 
                 className="collage-card-enter-3 absolute right-2 bottom-4 w-[220px] sm:w-[240px] h-[180px] sm:h-[195px] z-30"
               >
-                <div className="collage-interactive-card w-full h-full rounded-[22px] overflow-hidden border border-white/90 relative group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=700&q=80" 
-                    alt="Amalfi Coast Sea Cliff" 
-                    decoding="async"
-                    className="collage-inner-img w-full h-full object-cover"
-                  />
-                  <div 
-                    className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.95)',
-                      border: '1px solid rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
-                    }}
-                  >
-                    🌊 Amalfi Coast • Relaxed Vibe
+                <div className="float-bob-wrapper-3 w-full h-full">
+                  <div className="collage-interactive-card w-full h-full rounded-[22px] overflow-hidden border border-white/90 relative group">
+                    <img 
+                      src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=700&q=80" 
+                      alt="Amalfi Coast Sea Cliff" 
+                      decoding="async"
+                      className="collage-inner-img w-full h-full object-cover"
+                    />
+                    <div 
+                      className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.9)',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
+                      }}
+                    >
+                      🌊 Amalfi Coast • Relaxed Vibe
+                    </div>
                   </div>
                 </div>
               </div>
