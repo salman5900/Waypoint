@@ -231,9 +231,9 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
                     <div 
                       className="absolute bottom-4 left-4 right-4 p-3 rounded-xl"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.95)',
+                        background: 'rgba(255, 255, 255, 0.94)',
                         border: '1px solid rgba(255, 255, 255, 0.9)',
-                        boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
                       }}
                     >
                       <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
@@ -263,7 +263,7 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
                     <div 
                       className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.95)',
+                        background: 'rgba(255, 255, 255, 0.94)',
                         border: '1px solid rgba(255, 255, 255, 0.9)',
                         boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
                       }}
@@ -289,7 +289,7 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
                     <div 
                       className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-800"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.95)',
+                        background: 'rgba(255, 255, 255, 0.94)',
                         border: '1px solid rgba(255, 255, 255, 0.9)',
                         boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
                       }}

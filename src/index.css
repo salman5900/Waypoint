@@ -94,32 +94,32 @@
   animation: collage-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
 }
 
-/* Hardware-Accelerated CSS @keyframes Bobbing (translateY) on Outer Card Wrappers */
-@keyframes floatBob {
+/* Hardware-Accelerated Subpixel CSS @keyframes Bobbing on Outer Card Wrappers */
+@keyframes smoothFloatBob {
   0%, 100% {
-    transform: translateY(0px) translateZ(0);
+    transform: translate3d(0, 0px, 0) rotate(0.04deg) scale(1);
   }
   50% {
-    transform: translateY(-10px) translateZ(0);
+    transform: translate3d(0, -10px, 0) rotate(-0.04deg) scale(1.001);
   }
 }
 
 .float-bob-wrapper-1 {
-  animation: floatBob 6s ease-in-out infinite;
+  animation: smoothFloatBob 6s ease-in-out infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 .float-bob-wrapper-2 {
-  animation: floatBob 7s ease-in-out 0.8s infinite;
+  animation: smoothFloatBob 7s ease-in-out 0.8s infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 .float-bob-wrapper-3 {
-  animation: floatBob 5s ease-in-out 1.6s infinite;
+  animation: smoothFloatBob 5s ease-in-out 1.6s infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -152,8 +152,9 @@
 
 /* Crisp Card Hover Elevation (Strictly Isolated Specific Transitions - No transition: all) */
 .collage-interactive-card {
+  contain: layout paint;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   will-change: transform;
 }
 .collage-interactive-card:hover {
