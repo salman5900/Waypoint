@@ -5,7 +5,9 @@ import BackgroundGradients from './components/BackgroundGradients';
 import OverviewView from './components/OverviewView';
 import TripPlannerView from './components/TripPlannerView';
 import RoadmapView from './components/RoadmapView';
+import SettingsView from './components/SettingsView';
 import TabViews from './components/TabViews';
+import { SAMPLE_TOKYO_TRIP } from './data/sampleTokyoTrip';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -14,6 +16,66 @@ export default function App() {
   const [isLoadingTrip, setIsLoadingTrip] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef(null);
+
+  // Layout preference persisted in localStorage ('editorial' | 'bento')
+  const [roadmapLayout, setRoadmapLayout] = useState(() => {
+    try {
+      return localStorage.getItem('waypoint_roadmap_layout') || 'editorial';
+    } catch (e) {
+      return 'editorial';
+    }
+  });
+
+  // Currency preference persisted in localStorage ('USD' | 'EUR' | 'GBP' | 'JPY')
+  const [currency, setCurrency] = useState(() => {
+    try {
+      return localStorage.getItem('waypoint_currency') || 'USD';
+    } catch (e) {
+      return 'USD';
+    }
+  });
+
+  // Shared booking checklist state persisted across Design 1, Design 2, and Settings
+  const checklistStorageKey = 'waypoint_manual_booking_checklist_v1';
+  const defaultChecklist = [
+    { id: 'flight', text: 'Book Flight (ANA • All Nippon Airways)', checked: false },
+    { id: 'hotel', text: 'Reserve Stay (Trunk Hotel Yoyogi Park)', checked: false },
+    { id: 'maps', text: 'Download Offline Maps & Metro Guides', checked: true },
+    { id: 'esim', text: 'Order e-SIM or Mobile Pocket Wi-Fi', checked: false },
+    { id: 'passes', text: 'Reserve Tokyo Skytree / TeamLab Entry Pass', checked: false },
+  ];
+
+  const [checklist, setChecklist] = useState(() => {
+    try {
+      const saved = localStorage.getItem(checklistStorageKey);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return defaultChecklist;
+  });
+
+  const handleToggleChecklistItem = (id) => {
+    setChecklist((prev) => {
+      const updated = prev.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item));
+      try {
+        localStorage.setItem(checklistStorageKey, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const handleResetChecklist = () => {
+    setChecklist(defaultChecklist);
+    try {
+      localStorage.setItem(checklistStorageKey, JSON.stringify(defaultChecklist));
+    } catch (e) {}
+  };
+
+  const handleLayoutChange = (layout) => {
+    setRoadmapLayout(layout);
+    try {
+      localStorage.setItem('waypoint_roadmap_layout', layout);
+    } catch (e) {}
+  };
 
   const handleUseTemplate = (tmpl) => {
     setTemplateData(tmpl);
@@ -25,7 +87,7 @@ export default function App() {
     setActiveTab('planner');
   };
 
-  const isScrollable = activeTab === 'overview' || activeTab === 'roadmap';
+  const isScrollable = activeTab === 'overview' || (activeTab === 'roadmap' && roadmapLayout === 'editorial') || activeTab === 'settings';
 
   // Listen passively to whichever container scrolls (container or window)
   useEffect(() => {
@@ -67,7 +129,7 @@ export default function App() {
     >
       {/* 
         Scroll & Viewport Rules:
-        - Overview & Roadmap tabs: Smooth vertical scrolling without visible scrollbar (no-scrollbar)
+        - Overview, Roadmap & Settings tabs: Smooth vertical scrolling without visible scrollbar (no-scrollbar)
         - Planner tab: Strictly height: 100vh; overflow: hidden (zero scrolling, single viewport)
       */}
       <div 
@@ -122,10 +184,28 @@ export default function App() {
               tripData={tripData}
               onPlanTrip={handlePlanTrip}
               isLoading={isLoadingTrip}
+              roadmapLayout={roadmapLayout}
+              setRoadmapLayout={handleLayoutChange}
+              currency={currency}
+              checklist={checklist}
+              onToggleChecklistItem={handleToggleChecklistItem}
             />
           )}
 
-          {activeTab !== 'overview' && activeTab !== 'planner' && activeTab !== 'roadmap' && (
+          {activeTab === 'settings' && (
+            <SettingsView 
+              roadmapLayout={roadmapLayout}
+              setRoadmapLayout={handleLayoutChange}
+              currency={currency}
+              setCurrency={setCurrency}
+              onResetChecklist={handleResetChecklist}
+              onReloadSampleTrip={() => setTripData(SAMPLE_TOKYO_TRIP)}
+              onClearTrip={() => setTripData(null)}
+              onSwitchTab={setActiveTab}
+            />
+          )}
+
+          {activeTab !== 'overview' && activeTab !== 'planner' && activeTab !== 'roadmap' && activeTab !== 'settings' && (
             <div className="h-full flex items-center justify-center">
               <TabViews activeTab={activeTab} />
             </div>

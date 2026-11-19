@@ -20,12 +20,14 @@ export default function DailyItineraryTimeline({
   days = [],
   currency = 'USD',
   selectedFlight,
-  selectedHotel
+  selectedHotel,
+  checklist: propChecklist,
+  onToggleChecklistItem: propToggleChecklistItem
 }) {
   const [selectedDay, setSelectedDay] = useState(1);
   const [expandedItems, setExpandedItems] = useState({ '1-0': true, '1-1': true });
   
-  // Checklist state stored in localStorage
+  // Checklist state stored in localStorage if not supplied by parent
   const checklistStorageKey = 'waypoint_manual_booking_checklist_v1';
   const defaultChecklist = [
     { id: 'flight', text: `Book Flight (${selectedFlight?.airline || 'Selected Route'})`, checked: false },
@@ -35,7 +37,7 @@ export default function DailyItineraryTimeline({
     { id: 'passes', text: 'Reserve Tokyo Skytree / TeamLab Entry Pass', checked: false },
   ];
 
-  const [checklist, setChecklist] = useState(() => {
+  const [internalChecklist, setInternalChecklist] = useState(() => {
     try {
       const saved = localStorage.getItem(checklistStorageKey);
       if (saved) return JSON.parse(saved);
@@ -47,7 +49,8 @@ export default function DailyItineraryTimeline({
 
   // Keep flight/hotel names fresh in checklist if not checked
   useEffect(() => {
-    setChecklist((prev) => 
+    if (propChecklist) return;
+    setInternalChecklist((prev) => 
       prev.map((item) => {
         if (item.id === 'flight' && !item.checked && selectedFlight) {
           return { ...item, text: `Book Flight (${selectedFlight.airline} • ${selectedFlight.route})` };
@@ -58,11 +61,11 @@ export default function DailyItineraryTimeline({
         return item;
       })
     );
-  }, [selectedFlight, selectedHotel]);
+  }, [selectedFlight, selectedHotel, propChecklist]);
 
   // Persist checklist
-  const toggleChecklistItem = (id) => {
-    setChecklist((prev) => {
+  const internalToggleChecklistItem = (id) => {
+    setInternalChecklist((prev) => {
       const updated = prev.map((item) => 
         item.id === id ? { ...item, checked: !item.checked } : item
       );
@@ -72,6 +75,9 @@ export default function DailyItineraryTimeline({
       return updated;
     });
   };
+
+  const checklist = propChecklist || internalChecklist;
+  const toggleChecklistItem = propToggleChecklistItem || internalToggleChecklistItem;
 
   const toggleExpand = (key) => {
     setExpandedItems((prev) => ({
