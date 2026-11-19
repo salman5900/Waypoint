@@ -4,11 +4,14 @@ import Navbar from './components/Navbar';
 import BackgroundGradients from './components/BackgroundGradients';
 import OverviewView from './components/OverviewView';
 import TripPlannerView from './components/TripPlannerView';
+import RoadmapView from './components/RoadmapView';
 import TabViews from './components/TabViews';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [templateData, setTemplateData] = useState(null);
+  const [tripData, setTripData] = useState(null);
+  const [isLoadingTrip, setIsLoadingTrip] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef(null);
 
@@ -22,11 +25,11 @@ export default function App() {
     setActiveTab('planner');
   };
 
-  const isOverview = activeTab === 'overview';
+  const isScrollable = activeTab === 'overview' || activeTab === 'roadmap';
 
   // Listen passively to whichever container scrolls (container or window)
   useEffect(() => {
-    if (!isOverview) {
+    if (!isScrollable) {
       setIsScrolled(false);
       return;
     }
@@ -48,7 +51,7 @@ export default function App() {
       }
       window.removeEventListener('scroll', checkScroll);
     };
-  }, [isOverview]);
+  }, [isScrollable]);
 
   return (
     <ConfigProvider
@@ -64,13 +67,13 @@ export default function App() {
     >
       {/* 
         Scroll & Viewport Rules:
-        - Overview tab: Smooth vertical scrolling without visible scrollbar (no-scrollbar)
+        - Overview & Roadmap tabs: Smooth vertical scrolling without visible scrollbar (no-scrollbar)
         - Planner tab: Strictly height: 100vh; overflow: hidden (zero scrolling, single viewport)
       */}
       <div 
         ref={scrollContainerRef}
         className={`h-screen w-screen max-h-screen text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col relative ${
-          isOverview ? 'overflow-y-auto no-scrollbar' : 'overflow-hidden justify-between'
+          isScrollable ? 'overflow-y-auto no-scrollbar' : 'overflow-hidden justify-between'
         }`}
       >
         {/* Exact off-white to pure-white canvas with soft sky-blue and cobalt radial glows */}
@@ -78,7 +81,7 @@ export default function App() {
 
         {/* Sticky/Floating Top Header: Completely Transparent (No full-width blurred bar) */}
         <div 
-          className={`w-full z-40 ${isOverview ? 'sticky top-0' : 'shrink-0'}`}
+          className={`w-full z-40 ${isScrollable ? 'sticky top-0' : 'shrink-0'}`}
           style={{
             background: 'transparent',
             backdropFilter: 'none',
@@ -95,8 +98,8 @@ export default function App() {
         </div>
 
         {/* Main Content Area */}
-        <main className={`relative z-10 w-full ${isOverview ? 'flex-1' : 'flex-1 flex items-center justify-center overflow-hidden px-4'}`}>
-          {isOverview && (
+        <main className={`relative z-10 w-full ${isScrollable ? 'flex-1' : 'flex-1 flex items-center justify-center overflow-hidden px-4'}`}>
+          {activeTab === 'overview' && (
             <OverviewView 
               onPlanTrip={handlePlanTrip}
               onUseTemplate={handleUseTemplate}
@@ -108,10 +111,21 @@ export default function App() {
             <TripPlannerView 
               onBackToOverview={() => setActiveTab('overview')} 
               templateData={templateData}
+              onViewRoadmap={(payload) => {
+                setActiveTab('roadmap');
+              }}
             />
           )}
 
-          {activeTab !== 'overview' && activeTab !== 'planner' && (
+          {activeTab === 'roadmap' && (
+            <RoadmapView 
+              tripData={tripData}
+              onPlanTrip={handlePlanTrip}
+              isLoading={isLoadingTrip}
+            />
+          )}
+
+          {activeTab !== 'overview' && activeTab !== 'planner' && activeTab !== 'roadmap' && (
             <div className="h-full flex items-center justify-center">
               <TabViews activeTab={activeTab} />
             </div>

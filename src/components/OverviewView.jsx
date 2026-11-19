@@ -605,10 +605,10 @@ export default function OverviewView({ onPlanTrip, onUseTemplate, setActiveTab }
           </button>
           <button 
             type="button" 
-            onClick={() => setActiveTab('analytics')} 
+            onClick={() => setActiveTab('roadmap')} 
             className="hover:text-blue-600 active:scale-95 transition-all cursor-pointer"
           >
-            Analytics
+            Roadmap
           </button>
           <button 
             type="button" 

@@ -4,7 +4,7 @@ export default function Navbar({ activeTab, setActiveTab, isScrolled = false }) 
   const navItems = [
     { id: 'overview', label: 'Overview' },
     { id: 'planner', label: 'Planner' },
-    { id: 'analytics', label: 'Analytics' },
+    { id: 'roadmap', label: 'Roadmap' },
     { id: 'settings', label: 'Settings' },
   ];
 

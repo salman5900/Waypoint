@@ -81,7 +81,7 @@ const TRAVEL_STYLES = [
   { value: 'Backpacking / Budget', label: '🎒 Backpacking / Budget' },
 ];
 
-export default function TripPlannerView({ onBackToOverview, templateData }) {
+export default function TripPlannerView({ onBackToOverview, templateData, onViewRoadmap }) {
   const [form] = Form.useForm();
   const [currency, setCurrency] = useState('USD');
   const [submittedPayload, setSubmittedPayload] = useState(null);
@@ -509,16 +509,26 @@ export default function TripPlannerView({ onBackToOverview, templateData }) {
               Modify Parameters
             </Button>
             <Button
-              type="primary"
               size="large"
               onClick={onBackToOverview}
-              className="rounded-xl font-semibold cursor-pointer text-xs h-11 px-6"
+              className="rounded-xl border-slate-200 text-slate-700 font-semibold cursor-pointer text-xs h-11 px-5"
+            >
+              Return Home
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              icon={<CompassOutlined />}
+              onClick={() => {
+                if (onViewRoadmap) onViewRoadmap(submittedPayload);
+              }}
+              className="rounded-xl font-semibold cursor-pointer text-xs h-11 px-6 shadow-md shadow-blue-600/20"
               style={{
                 background: 'linear-gradient(135deg, #2563eb 0%, #0284c7 100%)',
                 border: 'none',
               }}
             >
-              Done / Return Home
+              View in Roadmap
             </Button>
           </div>
 
