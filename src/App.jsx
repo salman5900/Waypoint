@@ -14,10 +14,10 @@ import { SAMPLE_TOKYO_TRIP } from './data/sampleTokyoTrip';
 import { generateTrip } from './services/tripApi';
 
 const GENERATION_PHASES = [
-  "Connecting to Waypoint Gemini 2.0 AI Concierge...",
-  "Scouting commercial airline routes & schedules...",
-  "Selecting architectural boutique stays & neighborhood gems...",
-  "Structuring chronological day-by-day itinerary & budget breakdown...",
+  "Scouting multi-leg flights & stays...",
+  "Mapping landmarks & dining gems...",
+  "Structuring chronological day-by-day itinerary...",
+  "Polishing bespoke travel recommendations...",
 ];
 
 export default function App() {
@@ -72,11 +72,11 @@ export default function App() {
   // Shared booking checklist state persisted across Design 1, Design 2, and Settings
   const checklistStorageKey = 'waypoint_manual_booking_checklist_v1';
   const defaultChecklist = [
-    { id: 'flight', text: 'Book Flight (ANA • All Nippon Airways)', checked: false },
-    { id: 'hotel', text: 'Reserve Stay (Trunk Hotel Yoyogi Park)', checked: false },
+    { id: 'flight', text: 'Book Flight (Selected Route)', checked: false },
+    { id: 'hotel', text: 'Reserve Stay (Selected Property)', checked: false },
     { id: 'maps', text: 'Download Offline Maps & Metro Guides', checked: true },
     { id: 'esim', text: 'Order e-SIM or Mobile Pocket Wi-Fi', checked: false },
-    { id: 'passes', text: 'Reserve Tokyo Skytree / TeamLab Entry Pass', checked: false },
+    { id: 'passes', text: 'Reserve Sightseeing & Entry Passes', checked: false },
   ];
 
   const [checklist, setChecklist] = useState(() => {
@@ -86,6 +86,29 @@ export default function App() {
     } catch (e) {}
     return defaultChecklist;
   });
+
+  // Keep active trip flight, hotel, and destination in sync with checklist
+  useEffect(() => {
+    if (!tripData) return;
+    const destName = tripData.destination?.split(',')?.[0]?.trim() || tripData.itinerary?.destination?.split(',')?.[0]?.trim() || '';
+    const flightObj = tripData.itinerary?.flightOptions?.[0] || tripData.flightOptions?.[0];
+    const hotelObj = tripData.itinerary?.hotelRecommendations?.[0] || tripData.hotelRecommendations?.[0];
+
+    setChecklist((prev) =>
+      prev.map((item) => {
+        if (item.id === 'flight' && !item.checked && flightObj) {
+          return { ...item, text: `Book Flight (${flightObj.airline} • ${flightObj.route})` };
+        }
+        if (item.id === 'hotel' && !item.checked && hotelObj) {
+          return { ...item, text: `Reserve Stay (${hotelObj.name})` };
+        }
+        if (item.id === 'passes' && !item.checked && destName) {
+          return { ...item, text: `Reserve ${destName} Sightseeing & Entry Passes` };
+        }
+        return item;
+      })
+    );
+  }, [tripData]);
 
   const handleToggleChecklistItem = (id) => {
     setChecklist((prev) => {

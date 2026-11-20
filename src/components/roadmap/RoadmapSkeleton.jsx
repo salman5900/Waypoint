@@ -1,259 +1,251 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+const DEFAULT_STATUSES = [
+  "Scouting multi-leg flights & stays...",
+  "Mapping landmarks & dining gems...",
+  "Structuring day-by-day routing & budget...",
+  "Polishing bespoke travel recommendations...",
+];
 
 export default function RoadmapSkeleton({
-  layout = 'bento',
   destination = 'Destination',
   origin = 'Origin',
-  phaseText = 'Curating bespoke travel roadmap...'
+  days = 4,
+  phaseText = '',
+  // Accepted for backwards-compatibility; skeletons are removed for both layouts
+  layout = 'bento',
 }) {
+  const [internalStatusIndex, setInternalStatusIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setInternalStatusIndex((prev) => (prev + 1) % DEFAULT_STATUSES.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentStatus = phaseText || DEFAULT_STATUSES[internalStatusIndex];
+
   return (
-    <div className="w-full h-full flex flex-col justify-start select-none relative animate-fadeIn">
-      {layout === 'bento' ? (
-        /* ========================================================= */
-        /* 1. BENTO COCKPIT LAYOUT-MATCHED SKELETON (3 COLS × 3 ROWS)*/
-        /* Clean, YouTube/Linear-Grade Minimalist Shimmer Surface     */
-        /* ========================================================= */
-        <div className="w-full max-w-[1400px] mx-auto h-full lg:h-[calc(100vh-120px)] lg:max-h-[820px] flex flex-col justify-start overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.05fr_1.65fr_1.3fr] lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.15fr)] gap-3.5 h-full w-full">
-            
-            {/* Tile 1: Ticket Deck Skeleton (Col 1, Rows 1-2) */}
-            <div className="bento-tile col-span-1 lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-2 p-5 rounded-[28px] flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-white via-white to-sky-50/75 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-sky-950/35 border border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_rgb(15,23,42,0.04)] dark:shadow-[0_12px_32px_rgb(0,0,0,0.35)] h-full backdrop-blur-2xl">
-              <div>
-                <div className="flex items-center justify-between pb-2">
-                  <div className="w-28 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                  <div className="w-14 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                </div>
-                <div className="w-36 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse mt-1.5" />
-              </div>
+    <div className="w-full flex items-center justify-center p-4 select-none animate-fadeIn">
+      <style>{`
+        @keyframes robotFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(2.5deg); }
+        }
+        @keyframes eyeBlink {
+          0%, 88%, 100% { transform: scaleY(1); }
+          94% { transform: scaleY(0.1); }
+        }
+      `}</style>
 
-              {/* Minimal Boarding Pass Contour Shimmer */}
-              <div className="my-auto py-3 w-full flex items-center justify-center min-h-[190px] relative">
-                {/* Back Stay Card Shimmer */}
-                <div className="absolute inset-x-2 top-2 h-36 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-white/5 rotate-[3deg] -translate-y-1.5" />
-                
-                {/* Front Active Pass Shimmer */}
-                <div className="relative w-full rounded-2xl bg-white/95 dark:bg-slate-800/90 border border-slate-200/90 dark:border-white/10 p-4 space-y-3.5 shadow-md">
-                  <div className="flex items-center justify-between">
-                    <div className="w-28 h-3.5 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-14 h-3.5 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                  </div>
-                  <div className="flex items-center justify-between py-2.5">
-                    <div className="w-14 h-7 rounded-lg bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-8 h-1 rounded bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-14 h-7 rounded-lg bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                  </div>
-                  <div className="border-t border-dashed border-slate-200 dark:border-slate-700 pt-2.5 flex items-center justify-between">
-                    <div className="w-20 h-3 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-24 h-3 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                  </div>
-                </div>
-              </div>
+      {/* Sleek Centered Frosted-Glass Thinking Robot Card */}
+      <div className="relative max-w-md w-full mx-auto rounded-3xl p-8 sm:p-9 backdrop-blur-2xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-xl dark:shadow-2xl dark:shadow-black/60 text-center flex flex-col items-center transition-colors duration-300">
+        
+        {/* Soft Ambient Radial Halo behind Card */}
+        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-sky-400/15 via-blue-500/10 to-indigo-500/15 blur-2xl -z-10 pointer-events-none" />
 
-              <div className="pt-2 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                <div className="w-36 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                <div className="w-12 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-              </div>
-            </div>
+        {/* ========================================================= */}
+        {/* CUTE THINKING ROBOT ILLUSTRATION + SPINNING BUFFER RING    */}
+        {/* ========================================================= */}
+        <div className="relative w-36 h-36 flex items-center justify-center mb-6">
+          {/* Subtle Ambient Glow behind Spinner */}
+          <div className="absolute w-28 h-28 rounded-full bg-gradient-to-tr from-sky-400/20 via-blue-500/15 to-indigo-500/20 blur-xl pointer-events-none" />
 
-            {/* Tile 2: Center Anchor Hero Skeleton (Col 2, Rows 1-2) */}
-            {/* Focal Point: Live AI Progress Status Pill Cleanly Centered */}
-            <div className="bento-tile col-span-1 md:col-span-2 lg:col-start-2 lg:col-span-1 lg:row-start-1 lg:row-span-2 rounded-[32px] overflow-hidden relative p-6 sm:p-7 flex flex-col justify-between bg-slate-900/95 dark:bg-slate-950/95 border border-slate-800/80 dark:border-white/10 shadow-2xl h-full">
-              {/* Soft Ambient Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/15 via-transparent to-sky-600/10 pointer-events-none" />
+          {/* Subtle Static Outer Guide Ring */}
+          <div className="absolute inset-0 rounded-full border-2 border-slate-200/60 dark:border-slate-800/80" />
 
-              {/* Top Shimmer Header */}
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-32 h-6 rounded-full bg-white/15 animate-pulse" />
-                  <div className="hidden sm:block w-36 h-6 rounded-full bg-white/10 animate-pulse" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-16 h-7 rounded-full bg-white/15 animate-pulse" />
-                  <div className="w-16 h-7 rounded-full bg-blue-500/40 animate-pulse" />
-                </div>
-              </div>
+          {/* Smooth Rotating Buffer Spinner Ring */}
+          <svg
+            className="absolute inset-0 w-full h-full animate-spin pointer-events-none"
+            viewBox="0 0 100 100"
+            style={{ animationDuration: '1.6s' }}
+          >
+            <defs>
+              <linearGradient id="robotSpinnerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="1" />
+                <stop offset="60%" stopColor="#2563eb" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <circle
+              cx="50"
+              cy="50"
+              r="47"
+              fill="none"
+              stroke="url(#robotSpinnerGrad)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeDasharray="95 200"
+            />
+          </svg>
 
-              {/* CENTER STAGE: Clean Live AI Progress Status Pill */}
-              <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center px-4 py-6 space-y-4">
-                <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-2xl border border-white/20 dark:border-white/15 shadow-2xl shadow-blue-500/20 text-xs sm:text-sm font-semibold text-white">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500" />
-                  </span>
-                  <span className="tracking-tight text-white font-medium">{phaseText}</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/30 text-blue-200 border border-blue-400/30">
-                    {origin} → {destination}
-                  </span>
-                </div>
+          {/* Inline SVG Cute Thinking Robot */}
+          <div className="relative z-10 w-28 h-28 flex items-center justify-center">
+            <svg
+              viewBox="0 0 120 120"
+              className="w-full h-full overflow-visible"
+            >
+              <defs>
+                <linearGradient id="visorGlassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#090d16" />
+                  <stop offset="100%" stopColor="#020617" />
+                </linearGradient>
+                <linearGradient id="visorReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                </linearGradient>
+                <filter id="eyeGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="1.5" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
 
-                <div className="w-3/5 h-8 sm:h-9 rounded-2xl bg-white/20 animate-pulse" />
-                <div className="w-2/5 h-4 rounded-lg bg-white/10 animate-pulse" />
-              </div>
+              {/* Animated Floating Thinking Dots (• • •) beside head */}
+              <g className="thinking-dots pointer-events-none">
+                <circle cx="92" cy="28" r="2.5" fill="#38bdf8" opacity="0.9">
+                  <animate attributeName="cy" values="28; 24; 28" dur="1.4s" repeatCount="indefinite" begin="0s" />
+                  <animate attributeName="opacity" values="0.3; 1; 0.3" dur="1.4s" repeatCount="indefinite" begin="0s" />
+                </circle>
+                <circle cx="102" cy="20" r="3.5" fill="#38bdf8" opacity="0.9">
+                  <animate attributeName="cy" values="20; 16; 20" dur="1.4s" repeatCount="indefinite" begin="0.25s" />
+                  <animate attributeName="opacity" values="0.3; 1; 0.3" dur="1.4s" repeatCount="indefinite" begin="0.25s" />
+                </circle>
+                <circle cx="114" cy="13" r="4.5" fill="#38bdf8" opacity="0.9">
+                  <animate attributeName="cy" values="13; 9; 13" dur="1.4s" repeatCount="indefinite" begin="0.5s" />
+                  <animate attributeName="opacity" values="0.3; 1; 0.3" dur="1.4s" repeatCount="indefinite" begin="0.5s" />
+                </circle>
+              </g>
 
-              {/* Bottom Shimmer Day Pills */}
-              <div className="relative z-10 flex items-center gap-2 pt-2 border-t border-white/10">
-                {[1, 2, 3, 4].map((d) => (
-                  <div key={d} className="w-16 h-7 rounded-full bg-white/15 animate-pulse" />
-                ))}
-              </div>
-            </div>
+              {/* Floating & Head-Tilt Robot Figure */}
+              <g style={{ animation: 'robotFloat 3.2s ease-in-out infinite', transformOrigin: '60px 65px' }}>
+                {/* Antenna */}
+                <line x1="60" y1="36" x2="60" y2="23" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Pulsing antenna tip with glow beacon */}
+                <circle cx="60" cy="21" r="5" fill="#38bdf8" filter="url(#eyeGlow)">
+                  <animate attributeName="r" values="4; 6; 4" dur="1.8s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.75; 1; 0.75" dur="1.8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="60" cy="21" r="8" fill="none" stroke="#38bdf8" strokeWidth="1" opacity="0.4">
+                  <animate attributeName="r" values="5; 10; 5" dur="1.8s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.6; 0; 0.6" dur="1.8s" repeatCount="indefinite" />
+                </circle>
 
-            {/* Tile 3: Day Schedule 3D Stack Skeleton (Col 3, Rows 1-2) */}
-            <div className="bento-tile col-span-1 lg:col-start-3 lg:col-span-1 lg:row-start-1 lg:row-span-2 p-5 rounded-[28px] flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-white via-white to-sky-50/75 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-sky-950/35 border border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_rgb(15,23,42,0.04)] dark:shadow-[0_12px_32px_rgb(0,0,0,0.35)] h-full backdrop-blur-2xl">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
-                <div className="w-32 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-16 h-6 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
+                {/* Ears */}
+                <rect x="28" y="52" width="6" height="13" rx="3" fill="#64748b" />
+                <rect x="86" y="52" width="6" height="13" rx="3" fill="#64748b" />
 
-              {/* 3D Tilted Photo + Slices Skeleton (~72% / ~28%) */}
-              <div className="my-2 flex-1 flex items-stretch gap-2.5 min-h-0 relative">
-                {/* Front Hero Card (~72%) */}
-                <div className="w-[72%] h-full rounded-[22px] bg-white/85 dark:bg-slate-800/85 border border-slate-200/80 dark:border-white/10 p-3.5 flex flex-col justify-between shadow-md">
-                  <div className="space-y-2">
-                    <div className="w-20 h-3 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-full h-5 rounded-lg bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                  </div>
-                  <div className="h-28 rounded-xl bg-slate-200/75 dark:bg-slate-700/80 animate-pulse my-auto" />
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-white/10">
-                    <div className="w-20 h-4 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                    <div className="w-14 h-4 rounded-full bg-slate-200/75 dark:bg-slate-700 animate-pulse" />
-                  </div>
-                </div>
+                {/* Head Chassis */}
+                <rect
+                  x="33"
+                  y="36"
+                  width="54"
+                  height="44"
+                  rx="15"
+                  className="fill-slate-100 dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700"
+                  strokeWidth="1.5"
+                />
 
-                {/* Fanned Slices (~28%) */}
-                <div className="w-[28%] h-full flex flex-col gap-2">
-                  <div className="flex-1 rounded-[18px] bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                  <div className="flex-1 rounded-[18px] bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                </div>
-              </div>
+                {/* Expressive Rounded Visor Screen */}
+                <rect
+                  x="39"
+                  y="43"
+                  width="42"
+                  height="27"
+                  rx="9"
+                  fill="url(#visorGlassGrad)"
+                  stroke="#1e293b"
+                  strokeWidth="1"
+                />
+                {/* Visor Specular Reflection */}
+                <path
+                  d="M 40 47 Q 60 44 80 47 L 80 52 Q 60 49 40 52 Z"
+                  fill="url(#visorReflect)"
+                />
 
-              <div className="pt-2 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                <div className="w-32 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                <div className="w-12 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-              </div>
-            </div>
+                {/* Glowing Sky-Blue Eyes (with blink animation) */}
+                <g filter="url(#eyeGlow)">
+                  <rect
+                    x="47"
+                    y="50"
+                    width="8"
+                    height="12"
+                    rx="4"
+                    fill="#38bdf8"
+                    style={{ animation: 'eyeBlink 3.8s ease-in-out infinite', transformOrigin: '51px 56px' }}
+                  />
+                  {/* Eye light catch highlight */}
+                  <circle cx="49.5" cy="53" r="1.2" fill="#ffffff" />
 
-            {/* Tile 4: Budget Simulator Skeleton (Col 1, Row 3) */}
-            <div className="bento-tile col-span-1 lg:col-start-1 lg:col-span-1 lg:row-start-3 lg:row-span-1 p-5 rounded-[28px] flex flex-col justify-between bg-gradient-to-br from-white via-white to-sky-50/75 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-sky-950/35 border border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_rgb(15,23,42,0.04)] dark:shadow-[0_12px_32px_rgb(0,0,0,0.35)] h-full backdrop-blur-2xl">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full border-4 border-slate-200/75 dark:border-slate-700 animate-pulse shrink-0" />
-                <div className="space-y-1.5 flex-1">
-                  <div className="w-28 h-5 rounded-lg bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                  <div className="w-20 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 dark:border-white/10">
-                <div className="h-8 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="h-8 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="h-8 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="h-8 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
-            </div>
+                  <rect
+                    x="65"
+                    y="50"
+                    width="8"
+                    height="12"
+                    rx="4"
+                    fill="#38bdf8"
+                    style={{ animation: 'eyeBlink 3.8s ease-in-out infinite', transformOrigin: '69px 56px' }}
+                  />
+                  {/* Eye light catch highlight */}
+                  <circle cx="67.5" cy="53" r="1.2" fill="#ffffff" />
+                </g>
 
-            {/* Tile 5: Dining Spotlight Skeleton (Col 2, Row 3) */}
-            <div className="bento-tile col-span-1 lg:col-start-2 lg:col-span-1 lg:row-start-3 lg:row-span-1 p-5 rounded-[28px] flex flex-col justify-between bg-gradient-to-br from-white via-white to-sky-50/75 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-sky-950/35 border border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_rgb(15,23,42,0.04)] dark:shadow-[0_12px_32px_rgb(0,0,0,0.35)] h-full backdrop-blur-2xl">
-              <div className="flex items-center justify-between">
-                <div className="w-32 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-14 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
+                {/* Cute Rosy Cheek Blushes */}
+                <ellipse cx="45" cy="73.5" rx="3.5" ry="1.5" fill="#f43f5e" opacity="0.3" />
+                <ellipse cx="75" cy="73.5" rx="3.5" ry="1.5" fill="#f43f5e" opacity="0.3" />
 
-              <div className="my-1 flex items-center gap-3">
-                <div className="w-14 h-14 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse shrink-0" />
-                <div className="space-y-1.5 flex-1">
-                  <div className="w-36 h-4 rounded-lg bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                  <div className="w-24 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                  <div className="w-44 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                </div>
-              </div>
+                {/* Neck */}
+                <rect x="54" y="80" width="12" height="4" rx="2" fill="#64748b" />
 
-              <div className="pt-2 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                <div className="w-36 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                <div className="w-12 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-              </div>
-            </div>
-
-            {/* Tile 6: Booking To-Do Skeleton (Col 3, Row 3) */}
-            <div className="bento-tile col-span-1 lg:col-start-3 lg:col-span-1 lg:row-start-3 lg:row-span-1 p-5 rounded-[28px] flex flex-col justify-between bg-gradient-to-br from-white via-white to-sky-50/75 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-sky-950/35 border border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_rgb(15,23,42,0.04)] dark:shadow-[0_12px_32px_rgb(0,0,0,0.35)] h-full backdrop-blur-2xl">
-              <div className="flex items-center justify-between">
-                <div className="w-28 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-12 h-4 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
-
-              <div className="my-1 space-y-2">
-                <div className="w-full h-2 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="h-8 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
-
-              <div className="pt-2 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                <div className="w-36 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-                <div className="w-12 h-3 rounded-full bg-slate-200/60 dark:bg-slate-800/60 animate-pulse" />
-              </div>
-            </div>
-
+                {/* Compact Chassis (Body) */}
+                <rect
+                  x="41"
+                  y="84"
+                  width="38"
+                  height="20"
+                  rx="8"
+                  className="fill-slate-200 dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700"
+                  strokeWidth="1.5"
+                />
+                {/* Core Power Light */}
+                <circle cx="60" cy="94" r="3.5" fill="#38bdf8" filter="url(#eyeGlow)">
+                  <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            </svg>
           </div>
         </div>
-      ) : (
-        /* ========================================================= */
-        /* 2. EDITORIAL ROADMAP LAYOUT-MATCHED SKELETON               */
-        /* Clean Status Pill Centered at Top                         */
-        /* ========================================================= */
-        <div className="w-full max-w-[1280px] mx-auto space-y-8 animate-fadeIn pt-2">
-          {/* Status Pill Centered Cleanly at Top */}
-          <div className="w-full flex justify-center mb-6">
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-lg shadow-slate-900/5 dark:shadow-black/30 text-xs sm:text-sm font-semibold text-slate-800 dark:text-white">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500" />
-              </span>
-              <span className="tracking-tight">{phaseText}</span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60">
-                {origin} → {destination}
-              </span>
-            </div>
-          </div>
 
-          {/* Split Hero Banner Skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <div className="w-32 h-6 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              <div className="w-4/5 h-10 rounded-2xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              <div className="w-full h-4 rounded-lg bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              <div className="w-3/4 h-4 rounded-lg bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              <div className="flex items-center gap-3 pt-2">
-                <div className="w-24 h-7 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-32 h-7 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-24 h-7 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
-              <div className="flex items-center gap-3 pt-2">
-                <div className="w-36 h-11 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-                <div className="w-36 h-11 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              </div>
-            </div>
+        {/* ========================================================= */}
+        {/* CLEAN ROUTE & STATUS COPY                                 */}
+        {/* ========================================================= */}
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+          Curating Your Journey...
+        </h3>
 
-            <div className="lg:col-span-5 h-[340px] rounded-[32px] bg-slate-200/75 dark:bg-slate-800/75 animate-pulse border border-slate-200/80 dark:border-white/10 shadow-lg" />
-          </div>
-
-          {/* Budget Simulator Card Skeleton */}
-          <div className="p-8 rounded-[28px] space-y-4 bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="w-48 h-6 rounded-xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              <div className="w-28 h-6 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-            </div>
-            <div className="w-full h-3 rounded-full bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-20 rounded-2xl bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-              ))}
-            </div>
-          </div>
-
-          {/* 3D Flip Passes Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-[24px] h-60 bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-sm bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-            <div className="p-6 rounded-[24px] h-60 bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-sm bg-slate-200/75 dark:bg-slate-800/75 animate-pulse" />
-          </div>
+        {/* Route Subtitle */}
+        <div className="mt-2.5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/70 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <span>{origin || 'Origin'}</span>
+          <span className="text-blue-500 font-bold">→</span>
+          <span>{destination || 'Destination'}</span>
+          <span className="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500" />
+          <span>{days} {days === 1 ? 'Day' : 'Days'}</span>
         </div>
-      )}
+
+        {/* Single Rotating Status Line */}
+        <div className="mt-4.5 h-6 flex items-center justify-center overflow-hidden">
+          <p 
+            key={currentStatus} 
+            className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 animate-fadeIn truncate max-w-xs transition-opacity duration-300"
+          >
+            {currentStatus}
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
+
+// Named export for flexibility
+export { RoadmapSkeleton as RoadmapLoadingCard };

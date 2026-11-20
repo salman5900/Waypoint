@@ -104,10 +104,10 @@ const TRAVEL_STYLES = [
 ];
 
 const GENERATION_PHASES = [
-  "Connecting to Waypoint Gemini 2.0 AI Concierge...",
-  "Scouting commercial airline routes & schedules...",
-  "Selecting architectural boutique stays & neighborhood gems...",
-  "Structuring chronological day-by-day itinerary & budget breakdown...",
+  "Scouting multi-leg flights & stays...",
+  "Mapping landmarks & dining gems...",
+  "Structuring day-by-day routing & budget...",
+  "Polishing bespoke travel recommendations...",
 ];
 
 export default function TripPlannerView({ 
@@ -272,14 +272,13 @@ export default function TripPlannerView({
       )}
 
       {isGenerating ? (
-        /* ========================================================= */
-        /* TRUE LAYOUT-MATCHED SHIMMER SKELETON SCREEN (BENTO/EDIT) */
-        /* ========================================================= */
-        <div className="w-full h-full">
+        /* Unified Cute Thinking Robot Loading Card */
+        <div className="w-full min-h-[500px] flex items-center justify-center py-10 sm:py-16 px-4 animate-fadeIn">
           <RoadmapSkeleton 
             layout={roadmapLayout}
             destination={liveParams.destination}
             origin={liveParams.origin}
+            days={liveParams.days || 4}
             phaseText={GENERATION_PHASES[generationPhaseIndex]}
           />
         </div>

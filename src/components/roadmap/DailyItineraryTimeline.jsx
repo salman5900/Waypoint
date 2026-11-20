@@ -40,7 +40,7 @@ export default function DailyItineraryTimeline({
     { id: 'hotel', text: `Reserve Stay (${selectedHotel?.name || 'Selected Property'})`, checked: false },
     { id: 'maps', text: 'Download Offline Maps & Metro Guides', checked: true },
     { id: 'esim', text: 'Order e-SIM or Mobile Pocket Wi-Fi', checked: false },
-    { id: 'passes', text: 'Reserve Tokyo Skytree / TeamLab Entry Pass', checked: false },
+    { id: 'passes', text: `Reserve ${itinerary?.destination?.split(',')?.[0]?.trim() || 'Destination'} Sightseeing & Entry Passes`, checked: false },
   ];
 
   const [internalChecklist, setInternalChecklist] = useState(() => {
@@ -53,9 +53,10 @@ export default function DailyItineraryTimeline({
     return defaultChecklist;
   });
 
-  // Keep flight/hotel names fresh in checklist if not checked
+  // Keep flight/hotel names and destination fresh in checklist if not checked
   useEffect(() => {
     if (propChecklist) return;
+    const destName = itinerary?.destination?.split(',')?.[0]?.trim();
     setInternalChecklist((prev) => 
       prev.map((item) => {
         if (item.id === 'flight' && !item.checked && selectedFlight) {
@@ -64,10 +65,13 @@ export default function DailyItineraryTimeline({
         if (item.id === 'hotel' && !item.checked && selectedHotel) {
           return { ...item, text: `Reserve Stay (${selectedHotel.name})` };
         }
+        if (item.id === 'passes' && !item.checked && destName) {
+          return { ...item, text: `Reserve ${destName} Sightseeing & Entry Passes` };
+        }
         return item;
       })
     );
-  }, [selectedFlight, selectedHotel, propChecklist]);
+  }, [selectedFlight, selectedHotel, propChecklist, itinerary?.destination]);
 
   // Persist checklist
   const internalToggleChecklistItem = (id) => {

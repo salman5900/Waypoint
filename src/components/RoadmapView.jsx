@@ -101,7 +101,7 @@ export default function RoadmapView({
 
   const selectedFlight = itinerary?.flightOptions?.[selectedFlightIndex];
   const selectedHotel = itinerary?.hotelRecommendations?.[selectedHotelIndex];
-  const daysCount = itinerary?.days?.length || 4;
+  const daysCount = pendingTripParams?.days || tripData?.days || itinerary?.days?.length || 4;
 
   // Shared booking checklist state
   const checklistStorageKey = 'waypoint_manual_booking_checklist_v1';
@@ -110,7 +110,7 @@ export default function RoadmapView({
     { id: 'hotel', text: `Reserve Stay (${selectedHotel?.name || 'Selected Property'})`, checked: false },
     { id: 'maps', text: 'Download Offline Maps & Metro Guides', checked: true },
     { id: 'esim', text: 'Order e-SIM or Mobile Pocket Wi-Fi', checked: false },
-    { id: 'passes', text: 'Reserve Tokyo Skytree / TeamLab Entry Pass', checked: false },
+    { id: 'passes', text: `Reserve ${itinerary?.destination?.split(',')?.[0]?.trim() || 'Destination'} Sightseeing & Entry Passes`, checked: false },
   ];
 
   const [internalChecklist, setInternalChecklist] = useState(() => {
@@ -121,9 +121,10 @@ export default function RoadmapView({
     return defaultChecklist;
   });
 
-  // Keep flight/hotel names fresh in checklist if not checked
+  // Keep flight/hotel names and destination fresh in checklist if not checked
   useEffect(() => {
     if (externalChecklist) return;
+    const destName = itinerary?.destination?.split(',')?.[0]?.trim();
     setInternalChecklist((prev) => 
       prev.map((item) => {
         if (item.id === 'flight' && !item.checked && selectedFlight) {
@@ -132,10 +133,13 @@ export default function RoadmapView({
         if (item.id === 'hotel' && !item.checked && selectedHotel) {
           return { ...item, text: `Reserve Stay (${selectedHotel.name})` };
         }
+        if (item.id === 'passes' && !item.checked && destName) {
+          return { ...item, text: `Reserve ${destName} Sightseeing & Entry Passes` };
+        }
         return item;
       })
     );
-  }, [selectedFlight, selectedHotel, externalChecklist]);
+  }, [selectedFlight, selectedHotel, externalChecklist, itinerary?.destination]);
 
   const internalToggleChecklistItem = (id) => {
     setInternalChecklist((prev) => {
@@ -166,20 +170,21 @@ export default function RoadmapView({
 
   return (
     <div className={`w-full select-none text-slate-800 dark:text-slate-100 ${
-      currentLayout === 'bento' && (viewState === 'active' || viewState === 'loading')
+      currentLayout === 'bento' && viewState === 'active'
         ? 'max-w-[1400px] mx-auto h-full lg:h-[calc(100vh-92px)] max-h-[860px] flex flex-col justify-center px-4 sm:px-6 py-0 overflow-hidden'
         : 'max-w-[1280px] mx-auto px-6 sm:px-8 py-6 sm:py-10 flex flex-col items-center'
     }`}>
       
       {/* ========================================================= */}
-      {/* 1. LOADING SKELETON STATE                                 */}
+      {/* 1. UNIFIED CUTE THINKING ROBOT LOADING CARD               */}
       {/* ========================================================= */}
       {viewState === 'loading' && (
-        <div className="w-full h-full">
+        <div className="w-full min-h-[500px] flex items-center justify-center py-10 sm:py-16 px-4 animate-fadeIn">
           <RoadmapSkeleton 
             layout={currentLayout} 
             destination={destination} 
             origin={origin} 
+            days={daysCount}
             phaseText={generationPhase} 
           />
         </div>

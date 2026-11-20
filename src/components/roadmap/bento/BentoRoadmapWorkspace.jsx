@@ -51,22 +51,14 @@ export default function BentoRoadmapWorkspace({
   const [activeModal, setActiveModal] = useState(null); // 'budget' | 'dining' | 'tickets' | 'checklist' | 'schedule' | null
   const [activeActivityIndex, setActiveActivityIndex] = useState(0);
   const [flippedModalCards, setFlippedModalCards] = useState({});
-  
-  // Dynamic destination-matched hero slides (5 slides, Unsplash curated or API heroImages)
-  const heroSlides = resolveDestinationHeroSlides(itinerary, itinerary?.destination);
-
-  // Slideshow & Perspective States
-  const [slideIndex, setSlideIndex] = useState(0);
   const [isPlaceCardFlipped, setIsPlaceCardFlipped] = useState(false);
-
-  // Automatic ambient photo crossfade every 2.5s (2500ms)
-  useEffect(() => {
-    if (!heroSlides?.length) return;
-    const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 2500);
-    return () => clearInterval(timer);
-  }, [heroSlides?.length]);
+  
+  // Single static hero image (heroImages[0], heroImage, or curated destination fallback)
+  const heroImageUrl = 
+    (Array.isArray(itinerary?.heroImages) && itinerary.heroImages[0]) ||
+    itinerary?.heroImage ||
+    resolveDestinationHeroSlides(itinerary, itinerary?.destination)?.[0]?.url ||
+    resolveDestinationFallbackPhoto(itinerary?.destination || itinerary?.tripTitle);
   
   // Email states
   const [showEmailInput, setShowEmailInput] = useState(false);
@@ -229,8 +221,8 @@ export default function BentoRoadmapWorkspace({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <Plane className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                  <span className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wide">
-                    {selectedFlight?.airline || 'ALL NIPPON AIRWAYS'}
+                  <span className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wide truncate max-w-[140px]">
+                    {selectedFlight?.airline || 'SELECTED FLIGHT'}
                   </span>
                 </div>
                 <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60">
@@ -242,7 +234,7 @@ export default function BentoRoadmapWorkspace({
               <div className="flex items-center justify-between font-mono py-2">
                 <div className="text-left">
                   <span className="text-xl font-black text-slate-900 dark:text-white block leading-none">
-                    {selectedFlight?.route?.split('→')?.[0]?.trim() || 'SFO'}
+                    {selectedFlight?.route?.split('→')?.[0]?.trim() || itinerary?.origin?.split(',')?.[0]?.trim() || 'Origin'}
                   </span>
                   <span className="text-[9px] text-slate-400 dark:text-slate-400 font-sans">Origin</span>
                 </div>
@@ -252,14 +244,23 @@ export default function BentoRoadmapWorkspace({
                     <div className="w-full border-t border-slate-200 dark:border-slate-700" />
                     <Plane className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 rotate-90 absolute bg-white dark:bg-slate-800 px-0.5" />
                   </div>
-                  <span className="text-[9px] text-slate-400 dark:text-slate-400 font-sans mt-1">{selectedFlight?.duration || '10h 45m'}</span>
+                  <span className="text-[9px] text-slate-400 dark:text-slate-400 font-sans mt-1">{selectedFlight?.duration || 'Duration'}</span>
                 </div>
 
                 <div className="text-right">
                   <span className="text-xl font-black text-slate-900 dark:text-white block leading-none">
-                    {selectedFlight?.route?.split('→')?.[1]?.trim() || 'HND'}
+                    {(() => {
+                      const parts = selectedFlight?.route?.includes('→')
+                        ? selectedFlight.route.split('→')
+                        : selectedFlight?.route?.split('->') || [];
+                      return parts.length > 1
+                        ? parts[parts.length - 1].trim()
+                        : (itinerary?.destination?.split(',')?.[0]?.trim() || 'Dest');
+                    })()}
                   </span>
-                  <span className="text-[9px] text-slate-400 dark:text-slate-400 font-sans">Tokyo</span>
+                  <span className="text-[9px] text-slate-400 dark:text-slate-400 font-sans truncate max-w-[85px] block">
+                    {itinerary?.destination?.split(',')?.[0]?.trim() || 'Destination'}
+                  </span>
                 </div>
               </div>
 
@@ -297,32 +298,20 @@ export default function BentoRoadmapWorkspace({
         {/* ------------------------------------------------------- */}
         {/* TILE 2: CENTER ANCHOR TILE (The Hero Focal Point)        */}
         {/* Grid: Col 2, Rows 1-2 (1 Col Wide at 1.65fr)              */}
-        {/* Automatic Ambient Photo Crossfade & Ken Burns Drift       */}
+        {/* Static High-Contrast Hero Image                           */}
         {/* ------------------------------------------------------- */}
         <div className="bento-tile col-span-1 md:col-span-2 lg:col-start-2 lg:col-span-1 lg:row-start-1 lg:row-span-2 rounded-[32px] overflow-hidden relative group h-full bg-slate-950 border-0 p-0 shadow-xl flex flex-col justify-between p-5 sm:p-6">
-          {/* Background Slideshow: Crossfading Slides with Ken Burns Drift */}
+          {/* Static Hero Image Background (Zero timer, zero animation, zero flashing) */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {heroSlides.map((slide, idx) => {
-              const isActive = idx === slideIndex;
-              return (
-                <div
-                  key={idx}
-                  className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-                    isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
-                  }`}
-                >
-                  <img
-                    src={slide.url}
-                    alt={slide.title}
-                    onError={(e) => {
-                      e.currentTarget.src = resolveDestinationFallbackPhoto(itinerary?.destination || itinerary?.tripTitle);
-                    }}
-                    decoding="async"
-                    className="w-full h-full object-cover filter brightness-[0.72] contrast-[1.05]"
-                  />
-                </div>
-              );
-            })}
+            <img
+              src={heroImageUrl}
+              alt={itinerary?.destination || itinerary?.tripTitle || 'Destination'}
+              onError={(e) => {
+                e.currentTarget.src = resolveDestinationFallbackPhoto(itinerary?.destination || itinerary?.tripTitle);
+              }}
+              decoding="async"
+              className="w-full h-full object-cover filter brightness-[0.72] contrast-[1.05]"
+            />
 
             {/* High-Contrast Vignette / Dark Gradient Scrim */}
             <div 
@@ -333,16 +322,12 @@ export default function BentoRoadmapWorkspace({
             />
           </div>
 
-          {/* Top Bar: Eyebrow + Live Slide Pill + Email / Edit Action Buttons */}
+          {/* Top Bar: Eyebrow + Email / Edit Action Buttons */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-white/90 dark:bg-slate-900/85 backdrop-blur-md text-slate-900 dark:text-white shadow-sm border border-white/20 dark:border-white/10">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                 <span>{daysCount} Days • Day {selectedDay} Spotlight</span>
-              </div>
-              <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/40 backdrop-blur-md text-slate-200 border border-white/10">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="truncate max-w-[160px]">{heroSlides[slideIndex]?.title}</span>
               </div>
             </div>
 
@@ -409,7 +394,7 @@ export default function BentoRoadmapWorkspace({
               </p>
             </div>
 
-            {/* Quick Day Filter Pill Strip Inside Hero with Instant Crossfade */}
+            {/* Quick Day Filter Pill Strip Inside Hero */}
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
               {itinerary?.days?.map((d) => (
                 <button
@@ -417,7 +402,6 @@ export default function BentoRoadmapWorkspace({
                   type="button"
                   onClick={() => {
                     setSelectedDay(d.day);
-                    setSlideIndex((d.day - 1) % heroSlides.length);
                     setActiveActivityIndex(0);
                     setIsPlaceCardFlipped(false);
                   }}
