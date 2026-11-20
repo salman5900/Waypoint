@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -205,6 +207,23 @@
   animation: frostedShimmer 1.8s ease-in-out infinite;
 }
 
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 0.6) 0%,
+    rgba(51, 65, 85, 0.9) 50%,
+    rgba(30, 41, 59, 0.6) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Hide Top Header when any Modal / Drawer is Open */
+body.waypoint-modal-open header {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* Roadmap Frosted Glass Panel */
 .roadmap-glass-card {
   background: rgba(255, 255, 255, 0.76);
@@ -219,6 +238,19 @@
   transform: translateY(-2px);
   border-color: rgba(191, 219, 254, 0.9);
   box-shadow: 0 10px 28px -4px rgba(37, 99, 235, 0.08);
+}
+
+.dark .roadmap-glass-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+.dark .roadmap-glass-card:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 20px 45px -10px rgba(37, 99, 235, 0.25);
 }
 
 /* Tactile 3D Flip Card Primitives (Hardware-Accelerated) */
@@ -276,16 +308,94 @@
 }
 
 .bento-tile {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.84);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.25s ease;
+  box-shadow: 0 14px 34px -12px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.25s ease, background-color 0.3s ease;
 }
 
 .bento-tile:hover {
   transform: translateY(-2px);
   border-color: rgba(191, 219, 254, 0.95);
-  box-shadow: 0 12px 30px -6px rgba(37, 99, 235, 0.09);
+  box-shadow: 0 18px 36px -10px rgba(37, 99, 235, 0.12);
+}
+
+.dark .bento-tile {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+.dark .bento-tile:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 20px 45px -10px rgba(37, 99, 235, 0.25);
+}
+
+.perspective-900 {
+  perspective: 900px;
+  -webkit-perspective: 900px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.dark .nav-gliding-pill {
+  background: #1e293b;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: 0 2px 14px rgba(37, 99, 235, 0.25);
+}
+
+.dark .glass-surface {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.dark .studio-input,
+.dark .studio-input .ant-input,
+.dark .studio-input.ant-input,
+.dark .studio-input .ant-select-selector,
+.dark .studio-input.ant-select .ant-select-selector,
+.dark .studio-input .ant-input-number-input,
+.dark .studio-input.ant-input-number,
+.dark .studio-input .ant-input-number-group-addon {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .studio-input input::placeholder,
+.dark .studio-input .ant-input::placeholder,
+.dark .ant-input::placeholder {
+  color: #64748b !important;
+}
+
+.dark .studio-input .ant-input:focus,
+.dark .studio-input.ant-input:focus,
+.dark .studio-input.ant-input-focused,
+.dark .studio-input .ant-input-number:focus,
+.dark .studio-input.ant-input-number-focused,
+.dark .studio-input .ant-select-focused .ant-select-selector,
+.dark .studio-input.ant-select-focused .ant-select-selector {
+  background-color: #0f172a !important;
+  border-color: rgba(59, 130, 246, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
 }

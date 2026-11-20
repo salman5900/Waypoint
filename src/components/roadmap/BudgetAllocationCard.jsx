@@ -74,7 +74,7 @@ export default function BudgetAllocationCard({
       percent: Math.round(pFlights),
       color: '#2563EB',
       dotBg: 'bg-blue-600',
-      iconBg: 'bg-blue-50 text-blue-600 border border-blue-200/60',
+      iconBg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60',
       icon: <Plane className="w-3.5 h-3.5" />,
     },
     {
@@ -85,7 +85,7 @@ export default function BudgetAllocationCard({
       percent: Math.round(pHotels),
       color: '#0284C7',
       dotBg: 'bg-sky-500',
-      iconBg: 'bg-sky-50 text-sky-600 border border-sky-200/60',
+      iconBg: 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-200/60 dark:border-sky-800/60',
       icon: <Hotel className="w-3.5 h-3.5" />,
     },
     {
@@ -96,7 +96,7 @@ export default function BudgetAllocationCard({
       percent: Math.round(pFood),
       color: '#059669',
       dotBg: 'bg-emerald-500',
-      iconBg: 'bg-emerald-50 text-emerald-600 border border-emerald-200/60',
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60',
       icon: <Utensils className="w-3.5 h-3.5" />,
     },
     {
@@ -107,7 +107,7 @@ export default function BudgetAllocationCard({
       percent: Math.round(pTransit),
       color: '#D97706',
       dotBg: 'bg-amber-500',
-      iconBg: 'bg-amber-50 text-amber-600 border border-amber-200/60',
+      iconBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60',
       icon: <Sparkles className="w-3.5 h-3.5" />,
     },
   ];
@@ -131,7 +131,7 @@ export default function BudgetAllocationCard({
                 cx="80"
                 cy="80"
                 r={radius}
-                className="stroke-slate-100"
+                className="stroke-slate-100 dark:stroke-slate-800"
                 strokeWidth="16"
                 fill="transparent"
               />
@@ -203,16 +203,16 @@ export default function BudgetAllocationCard({
 
             {/* Centered Total Display */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-black text-slate-900 tracking-tight font-mono transition-all duration-300">
+              <span className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight font-mono transition-all duration-300">
                 {formatCurrency(totalCalculated)}
               </span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
                 EST. TOTAL
               </span>
             </div>
           </div>
 
-          <p className="text-[11px] font-semibold text-slate-400 mt-3 m-0">
+          <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-400 mt-3 m-0">
             Hover ring segments or tiles to inspect shares
           </p>
         </div>
@@ -223,18 +223,18 @@ export default function BudgetAllocationCard({
         <div className="lg:col-span-8 roadmap-glass-card p-6 sm:p-7 rounded-[32px] flex flex-col justify-between space-y-4 shadow-xs">
           
           {/* Header Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-200/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-200/60 dark:border-white/10">
             <div>
-              <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-50 tracking-tight">
                 Live Budget Cockpit
               </h3>
-              <p className="text-xs text-slate-500 m-0">
+              <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
                 Synchronized with flight routes and accommodations selected below.
               </p>
             </div>
 
             {/* Live Sync Status Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs self-start sm:self-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-500/30 shadow-2xs self-start sm:self-auto">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>Live Sync • Recalculates on Selection</span>
             </div>
@@ -249,10 +249,10 @@ export default function BudgetAllocationCard({
                   key={cat.id}
                   onMouseEnter={() => setHoveredCategory(cat.id)}
                   onMouseLeave={() => setHoveredCategory(null)}
-                  className={`p-4 rounded-2xl bg-white/85 border border-slate-200/70 shadow-2xs transition-all duration-200 cursor-pointer ${
+                  className={`p-4 rounded-2xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/70 dark:border-white/10 shadow-2xs transition-all duration-200 cursor-pointer ${
                     isHovered 
-                      ? 'shadow-md scale-[1.01] bg-white ring-1 ring-blue-500/20 border-blue-200' 
-                      : 'hover:border-slate-300'
+                      ? 'shadow-md scale-[1.01] bg-white dark:bg-slate-800 ring-1 ring-blue-500/20 border-blue-200 dark:border-blue-400/30' 
+                      : 'hover:border-slate-300 dark:hover:border-white/20'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -260,7 +260,7 @@ export default function BudgetAllocationCard({
                       <div className={`p-1.5 rounded-lg ${cat.iconBg} flex items-center justify-center`}>
                         {cat.icon}
                       </div>
-                      <span className="text-xs font-bold text-slate-800">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                         {cat.label}
                       </span>
                     </div>
@@ -276,10 +276,10 @@ export default function BudgetAllocationCard({
                   </div>
 
                   <div className="mt-2.5 flex items-baseline justify-between">
-                    <span className="text-lg font-black text-slate-900 tracking-tight font-mono">
+                    <span className="text-lg font-black text-slate-900 dark:text-slate-50 tracking-tight font-mono">
                       {formatCurrency(cat.amount)}
                     </span>
-                    <span className="text-[11px] font-semibold text-slate-400 truncate max-w-[140px]">
+                    <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-400 truncate max-w-[140px]">
                       {cat.sublabel}
                     </span>
                   </div>

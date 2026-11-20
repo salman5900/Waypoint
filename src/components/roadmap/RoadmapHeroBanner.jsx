@@ -14,16 +14,17 @@ import {
 } from 'lucide-react';
 import { message } from 'antd';
 import { emailRoadmap } from '../../services/tripApi';
+import { resolveDestinationHeroSlides, resolveDestinationFallbackPhoto } from '../../utils/travelPhotos';
 
-export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
+export default function RoadmapHeroBanner({ itinerary, onPlanTrip, onOpenEmailModal, tripId }) {
   const [imgError, setImgError] = useState(false);
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [email, setEmail] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  const fallbackGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%)';
   const heroImageUrl = itinerary?.heroImage || 
-    'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1600&q=85';
+    resolveDestinationHeroSlides(itinerary, itinerary?.destination)?.[0]?.url ||
+    resolveDestinationFallbackPhoto(itinerary?.destination || itinerary?.tripTitle);
 
   const daysCount = itinerary?.days?.length || 4;
   const flightsCount = itinerary?.flightOptions?.length || 2;
@@ -38,7 +39,7 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
 
     setIsSending(true);
     try {
-      const res = await emailRoadmap('tokyo-curated-roadmap', email);
+      const res = await emailRoadmap(tripId || 'sample', email);
       setIsSending(false);
       message.success({
         content: res.message,
@@ -46,7 +47,7 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
       });
       setShowEmailInput(false);
       setEmail('');
-    } catch (err) {
+    } catch {
       setIsSending(false);
       message.error('Failed to send email. Please try again.');
     }
@@ -62,35 +63,35 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
         <div className="lg:col-span-7 space-y-5 text-left">
           
           {/* Eyebrow Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-500/30 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>01 • CURATED ITINERARY</span>
           </div>
 
           {/* Bold Dark-Slate Trip Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 tracking-tight leading-[1.08]">
+          <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 dark:text-slate-50 tracking-tight leading-[1.08]">
             {itinerary?.tripTitle || 'Curated Travel Roadmap'}
           </h1>
 
           {/* Clean Summary */}
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
             {itinerary?.summary}
           </p>
 
           {/* Compact Glass Metadata Pills */}
           <div className="flex flex-wrap items-center gap-2.5 pt-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 text-slate-700 border border-slate-200/80 shadow-xs backdrop-blur-md">
-              <Calendar className="w-3.5 h-3.5 text-blue-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-md">
+              <Calendar className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               <span>{daysCount} Days</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 text-slate-700 border border-slate-200/80 shadow-xs backdrop-blur-md">
-              <Plane className="w-3.5 h-3.5 text-slate-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-md">
+              <Plane className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               <span>{flightsCount} Flight Routes</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 text-slate-700 border border-slate-200/80 shadow-xs backdrop-blur-md">
-              <Hotel className="w-3.5 h-3.5 text-slate-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-md">
+              <Hotel className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               <span>{hotelsCount} Stays</span>
             </div>
           </div>
@@ -101,10 +102,10 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowEmailInput(true)}
-                  className="px-5 py-2.5 rounded-full text-xs font-bold bg-white/95 text-slate-800 border border-slate-200/90 hover:bg-white hover:text-blue-600 active:scale-98 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+                  onClick={() => onOpenEmailModal ? onOpenEmailModal() : setShowEmailInput(true)}
+                  className="px-5 py-2.5 rounded-full text-xs font-bold bg-white/95 dark:bg-slate-900/85 text-slate-800 dark:text-slate-200 border border-slate-200/90 dark:border-white/15 hover:bg-white dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 active:scale-98 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <Mail className="w-3.5 h-3.5 text-blue-600" />
+                  <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                   <span>Email Roadmap</span>
                 </button>
 
@@ -120,10 +121,10 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
             ) : (
               <form 
                 onSubmit={handleSendEmail} 
-                className="flex items-center gap-2 bg-white/90 p-1.5 rounded-full border border-blue-200/90 shadow-md backdrop-blur-xl max-w-lg transition-all animate-fadeIn"
+                className="flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-full border border-blue-200/90 dark:border-white/15 shadow-md backdrop-blur-xl max-w-lg transition-all animate-fadeIn"
               >
                 <div className="pl-3 text-slate-400">
-                  <Mail className="w-4 h-4 text-blue-600" />
+                  <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </div>
                 <input
                   type="email"
@@ -131,7 +132,7 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address..."
                   autoFocus
-                  className="flex-1 px-2 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent"
+                  className="flex-1 px-2 py-1.5 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none bg-transparent"
                 />
                 <button
                   type="submit"
@@ -152,7 +153,7 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
                 <button
                   type="button"
                   onClick={() => setShowEmailInput(false)}
-                  className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer mr-1"
+                  className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer mr-1"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -176,9 +177,11 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
               className="w-full h-full object-cover object-center filter brightness-[0.92] group-hover:scale-[1.02] transition-transform duration-700"
             />
           ) : (
-            <div 
-              className="w-full h-full"
-              style={{ background: fallbackGradient }}
+            <img
+              src={resolveDestinationFallbackPhoto(itinerary?.destination || itinerary?.tripTitle)}
+              alt={itinerary?.tripTitle || 'Destination Showcase'}
+              decoding="async"
+              className="w-full h-full object-cover object-center filter brightness-[0.92]"
             />
           )}
 
@@ -191,8 +194,8 @@ export default function RoadmapHeroBanner({ itinerary, onPlanTrip }) {
           />
 
           {/* Floating Frosted-Glass Location Pill (Bottom Left) */}
-          <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-white/85 backdrop-blur-md text-slate-900 border border-white/80 shadow-md">
-            <MapPin className="w-3.5 h-3.5 text-blue-600" />
+          <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-white/85 dark:bg-slate-900/85 backdrop-blur-md text-slate-900 dark:text-slate-100 border border-white/80 dark:border-white/15 shadow-md">
+            <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>TOKYO • SHINJUKU & SHIBUYA</span>
           </div>
         </div>

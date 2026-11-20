@@ -5,30 +5,45 @@ import {
   Sparkles, 
   Navigation, 
   RefreshCw,
-  SlidersHorizontal,
-  LayoutGrid,
-  FileText
+  SlidersHorizontal
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { SAMPLE_TOKYO_TRIP } from '../data/sampleTokyoTrip';
 import RoadmapHeroBanner from './roadmap/RoadmapHeroBanner';
 import BudgetAllocationCard from './roadmap/BudgetAllocationCard';
 import ManualBookingGrid from './roadmap/ManualBookingGrid';
 import DailyItineraryTimeline from './roadmap/DailyItineraryTimeline';
 import BentoRoadmapWorkspace from './roadmap/bento/BentoRoadmapWorkspace';
+import EmailRoadmapModal from './roadmap/EmailRoadmapModal';
+import RoadmapSkeleton from './roadmap/RoadmapSkeleton';
 
 export default function RoadmapView({
   tripData,
   onPlanTrip,
   isLoading = false,
+  pendingTripParams = null,
+  generationPhase = 'Curating bespoke travel roadmap...',
   roadmapLayout: propRoadmapLayout,
   setRoadmapLayout: propSetRoadmapLayout,
   currency = 'USD',
   checklist: externalChecklist,
-  onToggleChecklistItem: externalToggleChecklistItem
+  onToggleChecklistItem: externalToggleChecklistItem,
+  theme = 'light'
 }) {
-  // Itinerary state
-  const [itinerary, setItinerary] = useState(tripData || SAMPLE_TOKYO_TRIP);
+  const { user, isAuthenticated, openAuthModal, openSavedTrips } = useAuth();
+
+  // Itinerary state: Null by default (no fake default sample trip when logged out/no trip generated)
+  const [itinerary, setItinerary] = useState(() => {
+    if (tripData?.itinerary) return tripData.itinerary;
+    if (tripData) return tripData;
+    return null;
+  });
   
+  const tripId = tripData?.id || null;
+  const destination = tripData?.destination || itinerary?.destination || pendingTripParams?.destination || 'Destination';
+  const origin = tripData?.origin || itinerary?.origin || pendingTripParams?.origin || 'Origin';
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
   // Selection states driving live budget simulator and booking checklist
   const [selectedFlightIndex, setSelectedFlightIndex] = useState(0);
   const [selectedHotelIndex, setSelectedHotelIndex] = useState(0);
@@ -38,12 +53,40 @@ export default function RoadmapView({
     try {
       const saved = localStorage.getItem('waypoint_roadmap_layout');
       return saved || 'editorial';
-    } catch (e) {
+    } catch {
       return 'editorial';
     }
   });
 
   const currentLayout = propRoadmapLayout || internalLayout;
+
+  // View state: 'active' | 'loading' | 'empty'
+  const [viewState, setViewState] = useState(() => {
+    if (isLoading) return 'loading';
+    if (tripData) return 'active';
+    return 'empty';
+  });
+
+  // Synchronize when incoming tripData or isLoading props change
+  useEffect(() => {
+    if (isLoading) {
+      setViewState('loading');
+      return;
+    }
+    if (tripData) {
+      if (tripData.itinerary) {
+        setItinerary(tripData.itinerary);
+      } else {
+        setItinerary(tripData);
+      }
+      setSelectedFlightIndex(0);
+      setSelectedHotelIndex(0);
+      setViewState('active');
+    } else {
+      setItinerary(null);
+      setViewState('empty');
+    }
+  }, [isLoading, tripData]);
 
   const handleLayoutChange = (layout) => {
     if (propSetRoadmapLayout) {
@@ -55,11 +98,6 @@ export default function RoadmapView({
       localStorage.setItem('waypoint_roadmap_layout', layout);
     } catch (e) {}
   };
-
-  // View state: 'active' | 'loading' | 'empty'
-  const [viewState, setViewState] = useState(
-    isLoading ? 'loading' : (tripData ? 'active' : 'active')
-  );
 
   const selectedFlight = itinerary?.flightOptions?.[selectedFlightIndex];
   const selectedHotel = itinerary?.hotelRecommendations?.[selectedHotelIndex];
@@ -127,8 +165,8 @@ export default function RoadmapView({
   };
 
   return (
-    <div className={`w-full select-none text-slate-800 ${
-      currentLayout === 'bento' && viewState === 'active'
+    <div className={`w-full select-none text-slate-800 dark:text-slate-100 ${
+      currentLayout === 'bento' && (viewState === 'active' || viewState === 'loading')
         ? 'max-w-[1400px] mx-auto h-full lg:h-[calc(100vh-92px)] max-h-[860px] flex flex-col justify-center px-4 sm:px-6 py-0 overflow-hidden'
         : 'max-w-[1280px] mx-auto px-6 sm:px-8 py-6 sm:py-10 flex flex-col items-center'
     }`}>
@@ -137,70 +175,92 @@ export default function RoadmapView({
       {/* 1. LOADING SKELETON STATE                                 */}
       {/* ========================================================= */}
       {viewState === 'loading' && (
-        <div className="w-full space-y-8 animate-fadeIn max-w-[1280px]">
-          {/* Skeleton Hero Banner */}
-          <div className="w-full h-[320px] rounded-[32px] skeleton-shimmer relative overflow-hidden" />
-
-          {/* Skeleton Budget */}
-          <div className="roadmap-glass-card p-8 rounded-[28px] space-y-4">
-            <div className="w-40 h-5 skeleton-shimmer rounded-full" />
-            <div className="w-full h-4 skeleton-shimmer rounded-full" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-24 skeleton-shimmer rounded-2xl" />
-              ))}
-            </div>
-          </div>
-
-          {/* Skeleton Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="roadmap-glass-card p-6 rounded-[24px] h-64 skeleton-shimmer" />
-            <div className="roadmap-glass-card p-6 rounded-[24px] h-64 skeleton-shimmer" />
-          </div>
-
-          <div className="flex items-center justify-center gap-3 py-6 text-slate-500 text-sm font-medium">
-            <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />
-            <span>Generating bespoke roadmap with live flight & hotel recommendations...</span>
-          </div>
+        <div className="w-full h-full">
+          <RoadmapSkeleton 
+            layout={currentLayout} 
+            destination={destination} 
+            origin={origin} 
+            phaseText={generationPhase} 
+          />
         </div>
       )}
 
       {/* ========================================================= */}
-      {/* 2. EMPTY STATE                                            */}
+      {/* 2. EMPTY WORKSPACE / SIGN-IN GATE CARD                    */}
       {/* ========================================================= */}
       {viewState === 'empty' && (
-        <div className="w-full min-h-[500px] flex items-center justify-center py-12 animate-fadeIn max-w-[1280px]">
-          <div className="roadmap-glass-card max-w-lg w-full p-8 sm:p-12 rounded-[32px] text-center flex flex-col items-center space-y-6">
-            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-blue-600 shadow-sm">
-              <Navigation className="w-8 h-8" />
+        <div className="w-full min-h-[520px] flex items-center justify-center py-12 px-4 animate-fadeIn max-w-[1280px]">
+          <div className="max-w-xl w-full p-8 sm:p-12 rounded-[32px] text-center flex flex-col items-center space-y-6 bg-white/90 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-2xl shadow-slate-900/5 dark:shadow-black/50">
+            {/* Subtle Glowing Compass Icon */}
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm">
+              <Compass className="w-8 h-8" />
             </div>
 
-            <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                No Roadmap Generated Yet
+            <div className="space-y-2.5">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                {!isAuthenticated ? "Sign In to Unlock Your Roadmap" : "Your Roadmap Workspace is Ready"}
               </h2>
-              <p className="text-sm text-slate-500 leading-relaxed max-w-md">
-                Waypoint organizes day-by-day itineraries, flight routing, stays, and restaurant recommendations into a unified interactive timeline.
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
+                {!isAuthenticated 
+                  ? "Sign in or create your free account to generate AI-curated itineraries, customize flight and stay booking passes, and manage your trips in the interactive cockpit."
+                  : `Welcome back${user?.username ? `, @${user.username}` : ''}! Head over to the Planner to curate a bespoke day-by-day itinerary with flights and stays, or explore your saved trips.`
+                }
               </p>
             </div>
 
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full pt-2">
-              <button
-                type="button"
-                onClick={onPlanTrip}
-                className="w-full sm:flex-1 py-3 px-5 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-600/20"
-              >
-                <span>Open Trip Planner</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => openAuthModal('otp')}
+                    className="w-full sm:flex-1 py-3 px-5 rounded-full text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-600/30"
+                  >
+                    <span>Sign In / Create Account</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={onPlanTrip}
+                    className="w-full sm:w-auto py-3 px-5 rounded-full text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-slate-200/80 dark:border-white/10"
+                  >
+                    <span>Go to Planner</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={onPlanTrip}
+                    className="w-full sm:flex-1 py-3 px-5 rounded-full text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-600/30"
+                  >
+                    <span>Go to Planner</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={openSavedTrips}
+                    className="w-full sm:flex-1 py-3 px-5 rounded-full text-xs sm:text-sm font-bold bg-white/90 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border border-slate-200/90 dark:border-white/10 hover:bg-white dark:hover:bg-slate-800 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    <Compass className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <span>Saved Trips</span>
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Subtle Interactive Demo Option */}
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={handleLoadSample}
-                className="w-full sm:flex-1 py-3 px-5 rounded-full text-sm font-semibold bg-white/90 text-slate-700 border border-slate-200/90 hover:bg-white hover:border-slate-300 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                className="text-xs font-semibold text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-blue-600" />
-                <span>Load Sample Tokyo Trip</span>
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Or preview interactive demo cockpit (Tokyo Sample)</span>
               </button>
             </div>
           </div>
@@ -220,6 +280,8 @@ export default function RoadmapView({
             <RoadmapHeroBanner 
               itinerary={itinerary} 
               onPlanTrip={onPlanTrip} 
+              onOpenEmailModal={() => setIsEmailModalOpen(true)}
+              tripId={tripId}
             />
 
             {/* Section 2: Interactive Live Budget Simulator */}
@@ -253,25 +315,28 @@ export default function RoadmapView({
             />
 
             {/* Footer Actions & Discreet Testing Trigger */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-200/60 text-xs text-slate-400 max-w-[1280px] mx-auto">
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-200/60 dark:border-white/10 text-xs text-slate-400 dark:text-slate-500 max-w-[1280px] mx-auto">
               <div className="flex items-center gap-2">
-                <Compass className="w-3.5 h-3.5 text-blue-600" />
+                <Compass className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                 <span>
                   Waypoint Editorial Roadmap • Direct Booking Verification
                 </span>
               </div>
 
               {/* Subtle, Discreet Testing Trigger in Footer */}
-              <div className="flex items-center gap-2 bg-white/60 p-1 rounded-full border border-slate-200/60 text-[11px]">
-                <span className="text-slate-400 px-2 flex items-center gap-1 font-semibold">
+              <div className="flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 p-1 rounded-full border border-slate-200/60 dark:border-white/10 text-[11px]">
+                <span className="text-slate-400 dark:text-slate-500 px-2 flex items-center gap-1 font-semibold">
                   <SlidersHorizontal className="w-3 h-3" />
                   <span>Preview:</span>
                 </span>
                 <button
                   type="button"
-                  onClick={() => setViewState('active')}
+                  onClick={() => {
+                    if (!itinerary) setItinerary(SAMPLE_TOKYO_TRIP);
+                    setViewState('active');
+                  }}
                   className={`px-2 py-0.5 rounded-full cursor-pointer transition-colors ${
-                    viewState === 'active' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 hover:text-slate-900'
+                    viewState === 'active' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Active
@@ -280,7 +345,7 @@ export default function RoadmapView({
                   type="button"
                   onClick={() => setViewState('loading')}
                   className={`px-2 py-0.5 rounded-full cursor-pointer transition-colors ${
-                    viewState === 'loading' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 hover:text-slate-900'
+                    viewState === 'loading' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Loading
@@ -289,7 +354,7 @@ export default function RoadmapView({
                   type="button"
                   onClick={() => setViewState('empty')}
                   className={`px-2 py-0.5 rounded-full cursor-pointer transition-colors ${
-                    viewState === 'empty' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 hover:text-slate-900'
+                    viewState === 'empty' ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Empty
@@ -302,7 +367,7 @@ export default function RoadmapView({
           /* DESIGN 2: BENTO GRID INTERACTIVE COCKPIT            */
           /* Locked 100% to single desktop viewport (No Scroll)  */
           /* =================================================== */
-          <div className="w-full h-full lg:h-[calc(100vh-92px)] max-h-[860px] flex flex-col justify-center overflow-hidden animate-fadeIn max-w-[1400px] mx-auto">
+          <div className="w-full h-full lg:h-[calc(100vh-120px)] max-h-[820px] flex flex-col justify-start overflow-hidden animate-fadeIn max-w-[1400px] mx-auto">
             <BentoRoadmapWorkspace 
               itinerary={itinerary}
               selectedFlightIndex={selectedFlightIndex}
@@ -313,10 +378,22 @@ export default function RoadmapView({
               checklist={checklist}
               onToggleChecklistItem={handleToggleChecklist}
               currency={currency}
+              theme={theme}
+              onOpenEmailModal={() => setIsEmailModalOpen(true)}
+              tripId={tripId}
             />
           </div>
         )
       )}
+
+      {/* Global Email Roadmap Modal */}
+      <EmailRoadmapModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        tripId={tripId}
+        tripTitle={itinerary?.tripTitle}
+        destination={destination}
+      />
 
     </div>
   );

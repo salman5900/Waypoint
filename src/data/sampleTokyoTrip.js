@@ -66,7 +66,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "sightseeing",
           description: "Stroll beneath century-old cypress torii gates and 100-year-old preserved cedar canopy into Tokyo's grandest Shinto shrine.",
           estimatedCost: 0,
-          mapOrBookingUrl: "https://maps.google.com/?q=Meiji+Jingu+Tokyo"
+          mapOrBookingUrl: "https://maps.google.com/?q=Meiji+Jingu+Tokyo",
+          image: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "02:00 PM",
@@ -74,7 +75,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "experience",
           description: "Explore boutique architectural landmarks along Cat Street with single-origin hand pour and matcha espresso.",
           estimatedCost: 18,
-          mapOrBookingUrl: "https://maps.google.com/?q=Cat+Street+Omotesando"
+          mapOrBookingUrl: "https://maps.google.com/?q=Cat+Street+Omotesando",
+          image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "06:00 PM",
@@ -82,7 +84,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "sightseeing",
           description: "Ascend 229 meters for an open-air panoramic sunset vista looking over Mount Fuji and the illuminated Shibuya scramble intersection.",
           estimatedCost: 22,
-          mapOrBookingUrl: "https://www.shibuya-scramble-square.com/sky/"
+          mapOrBookingUrl: "https://www.shibuya-scramble-square.com/sky/",
+          image: "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=1200&q=85"
         }
       ],
       restaurantPicks: [
@@ -112,7 +115,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "sightseeing",
           description: "Beat the afternoon crowds through the iconic Kaminarimon thunder gate into Tokyo's oldest 7th-century Buddhist temple.",
           estimatedCost: 0,
-          mapOrBookingUrl: "https://maps.google.com/?q=Sensoji+Tokyo"
+          mapOrBookingUrl: "https://maps.google.com/?q=Sensoji+Tokyo",
+          image: "https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "01:00 PM",
@@ -120,7 +124,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "transit",
           description: "Board the Himiko or Hotaluna panoramic water bus designed by anime icon Leiji Matsumoto to Hamarikyu Gardens.",
           estimatedCost: 16,
-          mapOrBookingUrl: "https://maps.google.com/?q=Tokyo+Water+Bus+Sumida"
+          mapOrBookingUrl: "https://maps.google.com/?q=Tokyo+Water+Bus+Sumida",
+          image: "https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "04:30 PM",
@@ -128,7 +133,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "shopping",
           description: "Browse pristine retro Japanese games, rare vinyl, and bespoke audio equipment at Super Potato and Radio Kaikan.",
           estimatedCost: 45,
-          mapOrBookingUrl: "https://maps.google.com/?q=Akihabara+Electric+Town"
+          mapOrBookingUrl: "https://maps.google.com/?q=Akihabara+Electric+Town",
+          image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1200&q=85"
         }
       ],
       restaurantPicks: [
@@ -158,7 +164,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "experience",
           description: "Explore preserved pre-war wooden residences, traditional wagashi confections, and artisan bamboo craft ateliers.",
           estimatedCost: 15,
-          mapOrBookingUrl: "https://maps.google.com/?q=Yanaka+Ginza+Tokyo"
+          mapOrBookingUrl: "https://maps.google.com/?q=Yanaka+Ginza+Tokyo",
+          image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "02:30 PM",
@@ -166,7 +173,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "sightseeing",
           description: "Immerse in national treasure samurai katanas, screens, and the UNESCO-listed National Museum of Western Art.",
           estimatedCost: 12,
-          mapOrBookingUrl: "https://maps.google.com/?q=Tokyo+National+Museum"
+          mapOrBookingUrl: "https://maps.google.com/?q=Tokyo+National+Museum",
+          image: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "08:00 PM",
@@ -174,7 +182,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "experience",
           description: "Sip vintage Japanese single malts while analog Garrard turntables spin classic Blue Note jazz on bespoke Tannoy speakers.",
           estimatedCost: 35,
-          mapOrBookingUrl: "https://maps.google.com/?q=Bar+Martha+Ebisu"
+          mapOrBookingUrl: "https://maps.google.com/?q=Bar+Martha+Ebisu",
+          image: "https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=85"
         }
       ],
       restaurantPicks: [
@@ -204,7 +213,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "experience",
           description: "Sample flame-torched scallops, fresh tamagoyaki skewers, and sashimi bowls prepared directly from Toyosu arrivals.",
           estimatedCost: 30,
-          mapOrBookingUrl: "https://maps.google.com/?q=Tsukiji+Outer+Market"
+          mapOrBookingUrl: "https://maps.google.com/?q=Tsukiji+Outer+Market",
+          image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "01:30 PM",
@@ -212,7 +222,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "experience",
           description: "Wade barefoot through crystal water installations and infinite floating orchid gardens at Toyosu's world-famous sensory museum.",
           estimatedCost: 38,
-          mapOrBookingUrl: "https://planets.teamlab.art/tokyo/"
+          mapOrBookingUrl: "https://planets.teamlab.art/tokyo/",
+          image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=85"
         },
         {
           time: "06:00 PM",
@@ -220,7 +231,8 @@ export const SAMPLE_TOKYO_TRIP = {
           category: "sightseeing",
           description: "Sunset rooftop vista with Tokyo Tower radiating in incandescent amber against the urban evening sprawl.",
           estimatedCost: 20,
-          mapOrBookingUrl: "https://tcv.roppongihills.com/"
+          mapOrBookingUrl: "https://tcv.roppongihills.com/",
+          image: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85"
         }
       ],
       restaurantPicks: [
